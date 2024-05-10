@@ -1,4 +1,7 @@
 import axios from 'axios';
+import Users from './Users';
+import Occurence from './Occurence';
+import Computer from './Computer';
 
 export const axiosInstance = axios.create({});
 axiosInstance.defaults.baseURL = import.meta.env.VITE_API_ADDRESS;
@@ -10,4 +13,7 @@ export default {
       return res.data;
     });
   },
+  Users,
+  Occurence,
+  Computer,
 };
