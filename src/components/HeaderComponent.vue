@@ -35,10 +35,13 @@
       </v-list>
     </v-menu>
   </header>
+  <UserConfigModal v-model="showConfigModal" />
 </template>
 <script setup>
 import router from '@/router';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+
+import UserConfigModal from '@/pages/UserConfigModal.vue';
 
 const currentRoute = computed(() => router.currentRoute.value.path);
 const links = computed(() => [
@@ -48,8 +51,11 @@ const links = computed(() => [
   { name: 'Usuários', path: '/user' },
 ]);
 
+const showConfigModal = ref(false);
+
 const openConfig = () => {
   console.log('config');
+  showConfigModal.value = true;
 };
 
 const exit = () => {
