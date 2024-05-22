@@ -14,7 +14,7 @@
     "pinia": "^2.1.7",
     "roboto-fontface": "*",
     "vue": "^3.4.0",
-    "vuetify": "^3.5.0"
+    "vuetify": "^3.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

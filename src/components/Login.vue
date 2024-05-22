@@ -98,7 +98,6 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import { useAuthStore} from '../stores/auth.store'
 
 const email = ref();
 const password = ref();

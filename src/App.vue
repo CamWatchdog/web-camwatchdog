@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="body">
       <HeaderComponent v-if="!isLoginPage" />
       <router-view />
     </v-main>
@@ -14,3 +14,9 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
 
 const isLoginPage = computed(() => router.currentRoute.value.path === '/login');
 </script>
+
+<style scoped>
+.body {
+  background-color: var(--neutral-gray-200);
+}
+</style>

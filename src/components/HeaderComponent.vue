@@ -45,7 +45,7 @@ import UserConfigModal from '@/pages/UserConfigModal.vue';
 
 const currentRoute = computed(() => router.currentRoute.value.path);
 const links = computed(() => [
-  { name: 'Ocorrências', path: '/occurences' },
+  { name: 'Ocorrências', path: '/occurrences' },
   { name: 'Dashboard', path: '/dashboard' },
   { name: 'Monitoramento', path: '/computers' },
   { name: 'Usuários', path: '/users' },
