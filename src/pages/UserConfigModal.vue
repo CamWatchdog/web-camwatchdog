@@ -5,23 +5,33 @@
       <v-card-text class="content">
         <v-form v-model="formValidate">
           <div class="fields">
-            <v-text-field v-model="user.name" :rules="[required]" variant="solo" label="Nome" />
-            <v-text-field v-model="user.cpf" :rules="[required]" variant="solo" label="CPF" />
+            <v-text-field
+              v-model="user.name"
+              :rules="[Util.Rules.required]"
+              variant="solo"
+              label="Nome"
+            />
+            <v-text-field
+              v-model="user.cpf"
+              :rules="[Util.Rules.required]"
+              variant="solo"
+              label="CPF"
+            />
             <v-text-field
               v-model="user.email"
-              :rules="[required, email]"
+              :rules="[Util.Rules.required, Util.Rules.email]"
               variant="solo"
               label="E-mail"
             />
             <v-text-field
               v-model="user.currentPassword"
-              :rules="[passwordHasSpecialChar, passwordMinChar]"
+              :rules="[Util.Rules.passwordHasSpecialChar, Util.Rules.passwordMinChar]"
               variant="solo"
               label="Senha atual"
             />
             <v-text-field
               v-model="user.newPassword"
-              :rules="[passwordHasSpecialChar, passwordMinChar]"
+              :rules="[Util.Rules.passwordHasSpecialChar, Util.Rules.passwordMinChar]"
               variant="solo"
               label="Nova senha"
             />
@@ -35,6 +45,7 @@
 <script setup>
 import { ref } from 'vue';
 import api from '@/api';
+import Util from '@/util';
 
 const model = defineModel();
 
@@ -46,13 +57,6 @@ const user = ref({
   newPassword: '',
 });
 const formValidate = ref(false);
-
-const required = (val) => !!val || 'Campo obrigatório';
-const passwordMinChar = (val) =>
-  val === '' || val.length >= 8 || 'Senha deve ter no mínimo 8 caracteres';
-const passwordHasSpecialChar = (val) =>
-  val === '' || !/[^a-zA-Z0-9]/g.test(val) || 'Senha não pode conter caracteres especiais';
-const email = (val) => (val && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) || 'E-mail inválido';
 
 const updateUser = () => {
   console.log('update user');

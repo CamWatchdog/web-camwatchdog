@@ -1,5 +1,5 @@
 <template>
-  <div class="occurence-list">
+  <div class="computer-list">
     <h2>Monitoramento</h2>
     <div class="filter">
       <div class="search"></div>
@@ -7,28 +7,75 @@
       <div class="end-time"></div>
     </div>
     <div class="list">
-      <div class="list-item">
+      <div v-for="computer in computerList" :key="computer.computerId" class="list-item">
         <v-icon icon="mdi-laptop" color="var(--blue-500)" />
         <div class="list-item-info">
-          <div class="date">11 de fevereiro de 2024 23:59</div>
-          <div class="user">Computador: Pedro</div>
+          <div class="date">{{ util.formatDate(computer.createdAt) }}</div>
+          <div class="user">Computador: {{ computer.description }}</div>
         </div>
         <div class="actions">
-          <v-btn variant="text" icon="mdi-pencil-outline" color="var(--blue-500)" />
-          <v-btn variant="text" icon="mdi-trash-can-outline" color="var(--blue-500)" />
+          <v-btn
+            @click="addEditComputer(computer)"
+            variant="text"
+            icon="mdi-pencil-outline"
+            color="var(--blue-500)"
+          />
+          <v-btn
+            variant="text"
+            icon="mdi-trash-can-outline"
+            color="var(--blue-500)"
+            @click="deleteComputer(computer)"
+          />
         </div>
       </div>
     </div>
   </div>
+  <ComputerConfirmDeleteModal v-model="showConfirmDeleteModal" ref="DeleteModal" />
+  <ComputerAddEditModal v-model="showAddEditModal" ref="AddEditModal" />
 </template>
 <script setup>
-const occurences = [
-  { id: 1, title: 'Occurence 1' },
-  { id: 2, title: 'Occurence 2' },
-  { id: 3, title: 'Occurence 3' },
-];
+import { onMounted, ref } from 'vue';
+import ComputerConfirmDeleteModal from './ComputerConfirmDeleteModal.vue';
+import ComputerAddEditModal from './ComputerAddEditModal.vue';
+
+import util from '@/util';
+import api from '../../api';
+
+const computerList = ref([]);
+const search = ref('');
+const pageSize = ref(0);
+const page = ref(1);
+const showConfirmDeleteModal = ref(false);
+const showAddEditModal = ref(false);
+
+const DeleteModal = ref(null);
+const AddEditModal = ref(null);
+
+const getComputerList = async () => {
+  api.Computer.findAll(search.value, pageSize.value, page.value).then((response) => {
+    console.log(response.data.data);
+    computerList.value = response.data.data;
+  });
+};
+
+const deleteComputer = (computer) => {
+  DeleteModal.value.openModal(computer);
+};
+
+const addEditComputer = (computer) => {
+  console.log('qui');
+  AddEditModal.value.openModal(computer);
+};
+
+onMounted(() => {
+  getComputerList();
+});
 </script>
 <style scoped>
+.computer-list {
+  padding: 1rem;
+}
+
 .list {
   display: flex;
   width: 100%;

@@ -7,8 +7,10 @@ export default {
   findOne(id) {
     return axiosInstance.get(`/computer/${id}`);
   },
-  findAll(search = '', pageSize = 10, page = 1) {
-    return axiosInstance.get(`/computer?search=${search}&pageSize=${pageSize}&page=${page}`);
+  findAll(description = '', pageSize = 10, page = 1, startTime = 0, endTime = 0) {
+    return axiosInstance.get(
+      `/computer?description=${description}&pageSize=${pageSize}&page=${page}&startTime=${startTime}&endTime=${endTime}`,
+    );
   },
   update(id, computer) {
     return axiosInstance.patch(`/computer/${id}`, computer);
