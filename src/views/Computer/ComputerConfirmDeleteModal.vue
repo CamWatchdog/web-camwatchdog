@@ -22,13 +22,19 @@
   </v-dialog>
 </template>
 <script setup>
+import api from '@/api';
 import { ref } from 'vue';
 
 const model = defineModel();
 const computerValue = ref(null);
 
+const emit = defineEmits(['delete']);
+
 const submit = () => {
-  console.log('delete computer');
+  api.Computer.delete(computerValue.value.computerId).then(() => {
+    model.value = false;
+    emit('delete');
+  });
 };
 
 const openModal = (computer) => {

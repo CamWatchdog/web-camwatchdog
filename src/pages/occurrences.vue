@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import Occurrences from '@/components/Occurrences.vue';
+import Occurrences from '@/views/Occurrences.vue';
 </script>

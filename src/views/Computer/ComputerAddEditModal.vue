@@ -81,6 +81,8 @@ const step = ref(0);
 const token = ref('');
 const formValidate = ref(false);
 
+const emit = defineEmits(['submit']);
+
 const submit = () => {
   if (formValidate.value) {
     if (computerValue.value.computerId) {
@@ -95,6 +97,7 @@ const update = () => {
   api.Computer.update(computerValue.value.computerId, computerValue.value).then((resp) => {
     token.value = resp.data;
     step.value = 1;
+    emit('submit');
   });
 };
 
@@ -103,6 +106,7 @@ const create = () => {
     console.log(resp);
     token.value = resp.data;
     step.value = 1;
+    emit('submit');
   });
 };
 

@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import ComputerList from './Computer/ComputerList.vue';
+import ComputerList from '@/views/Computer/ComputerList.vue';
 </script>

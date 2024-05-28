@@ -34,9 +34,22 @@
         </div>
       </div>
     </div>
+    <v-container>
+      <v-row justify="center">
+        <v-col cols="5">
+          <v-container class="max-width">
+            <v-pagination v-model="page" :length="15" />
+          </v-container>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
-  <ComputerConfirmDeleteModal v-model="showConfirmDeleteModal" ref="DeleteModal" />
-  <ComputerAddEditModal v-model="showAddEditModal" ref="AddEditModal" />
+  <ComputerConfirmDeleteModal
+    v-model="showConfirmDeleteModal"
+    @delete="getComputerList"
+    ref="DeleteModal"
+  />
+  <ComputerAddEditModal v-model="showAddEditModal" @submit="getComputerList" ref="AddEditModal" />
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
@@ -56,9 +69,8 @@ const showAddEditModal = ref(false);
 const DeleteModal = ref(null);
 const AddEditModal = ref(null);
 
-const getComputerList = async () => {
+const getComputerList = () => {
   api.Computer.findAll(search.value, pageSize.value, page.value).then((response) => {
-    console.log(response.data.data);
     computerList.value = response.data.data;
   });
 };
