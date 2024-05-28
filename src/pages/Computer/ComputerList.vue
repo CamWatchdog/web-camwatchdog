@@ -1,6 +1,11 @@
 <template>
   <div class="computer-list">
-    <h2>Monitoramento</h2>
+    <div class="computer-header">
+      <h2>Monitoramento</h2>
+      <v-btn @click="addEditComputer({})" color="var(--blue-700)" class="add-button">
+        Adicionar
+      </v-btn>
+    </div>
     <div class="filter">
       <div class="search"></div>
       <div class="start-time"></div>
@@ -63,7 +68,6 @@ const deleteComputer = (computer) => {
 };
 
 const addEditComputer = (computer) => {
-  console.log('qui');
   AddEditModal.value.openModal(computer);
 };
 
@@ -103,5 +107,15 @@ onMounted(() => {
 
 .actions {
   display: flex;
+}
+
+.computer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.computer-header .add-button {
+  color: white;
 }
 </style>

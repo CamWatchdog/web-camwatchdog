@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use((config) => {
   }
 
   config.headers['Authorization'] =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZmVsaXBpbiIsImlkIjoyLCJjcGYiOiIxMzI4NzczMzk2NiIsImVtYWlsIjoiZi5hLmphbm90dGVAZ21haWwuY29tIiwiaWF0IjoxNzE2MzI5OTAzLCJleHAiOjE3MTYzNDQzMDN9.eq7viMG1DUISwRxuMbE4k12X4d90YZf64B-BYggeEGU';
+    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZmVsaXBpbiIsImlkIjoyLCJjcGYiOiIxMzI4NzczMzk2NiIsImVtYWlsIjoiZi5hLmphbm90dGVAZ21haWwuY29tIiwiaWF0IjoxNzE2OTMyNzQ2LCJleHAiOjE3MTY5NDcxNDZ9.VrajPhHLDGJsu4khGsvcAIG1fHRPezFvN9fQq8Aj3NM';
 
   console.log(config);
   return config;

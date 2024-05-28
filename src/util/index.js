@@ -12,6 +12,9 @@ export default {
 
     return `${day} de ${month} de ${year} ${hours}:${minutes}`;
   },
+  copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+  },
   MonthEnum,
   Rules,
 };

@@ -5,7 +5,7 @@
         {{ computerValue.computerId ? 'Editar' : 'Criar' }}
       </v-card-title>
       <div v-if="step === 0" class="computer-add-edit-card">
-        <v-form class="computer-add-edit-form">
+        <v-form @submit.prevent v-model="formValidate" class="computer-add-edit-form">
           <v-text-field
             v-model="computerValue.description"
             density="comfortable"
@@ -13,40 +13,59 @@
             label="Descrição"
             :rules="[Util.Rules.required]"
           />
+          <v-card-actions class="d-flex justify-space-between w-100">
+            <v-btn
+              class="computer-add-edit-btn"
+              flat
+              @click="model = false"
+              variant="outlined"
+              color="white"
+            >
+              Cancelar
+            </v-btn>
+            <v-btn
+              class="computer-add-edit-btn"
+              variant="elevated"
+              color="var(--blue-500)"
+              @click="submit"
+              type="submit"
+              style="color: white"
+            >
+              {{ computerValue && computerValue.computerId ? 'Editar' : 'Criar' }}
+            </v-btn>
+          </v-card-actions>
         </v-form>
-        <v-card-actions class="d-flex justify-space-between w-100">
-          <v-btn
-            class="computer-add-edit-btn"
-            flat
-            @click="model = false"
-            variant="outlined"
-            color="white"
-          >
-            Cancelar
-          </v-btn>
-          <v-btn
-            class="computer-add-edit-btn"
-            variant="elevated"
-            color="var(--blue-500)"
-            @click="submit"
-            style="color: white"
-          >
-            {{ computerValue && computerValue.computerId ? 'Editar' : 'Criar' }}
-          </v-btn>
-        </v-card-actions>
       </div>
       <div v-else-if="step === 1" class="computer-add-edit-card">
-        <v-card-actions class="d-flex justify-space-between w-100">
-          <v-btn
-            class="computer-add-edit-btn"
-            variant="elevated"
-            color="var(--blue-500)"
-            @click="copy"
-            style="color: white"
-          >
-            Copiar Token
-          </v-btn>
-        </v-card-actions>
+        <v-form class="computer-add-edit-form">
+          <v-text-field
+            v-model="token"
+            readonly
+            density="comfortable"
+            variant="solo"
+            label="Token do Computador"
+          />
+          <v-card-actions class="d-flex justify-space-between w-100">
+            <v-btn
+              class="computer-add-edit-btn"
+              flat
+              @click="close"
+              variant="outlined"
+              color="white"
+            >
+              Fechar
+            </v-btn>
+            <v-btn
+              class="computer-add-edit-btn"
+              variant="elevated"
+              color="var(--blue-500)"
+              @click="copy"
+              style="color: white"
+            >
+              Copiar Token
+            </v-btn>
+          </v-card-actions>
+        </v-form>
       </div>
     </v-card>
   </v-dialog>
@@ -54,18 +73,52 @@
 <script setup>
 import { ref } from 'vue';
 import Util from '@/util';
+import api from '@/api';
 
 const model = defineModel();
 const computerValue = ref({});
 const step = ref(0);
+const token = ref('');
+const formValidate = ref(false);
 
 const submit = () => {
-  step.value = 1;
+  if (formValidate.value) {
+    if (computerValue.value.computerId) {
+      update();
+    } else {
+      create();
+    }
+  }
+};
+
+const update = () => {
+  api.Computer.update(computerValue.value.computerId, computerValue.value).then((resp) => {
+    token.value = resp.data;
+    step.value = 1;
+  });
+};
+
+const create = () => {
+  api.Computer.create(computerValue.value).then((resp) => {
+    console.log(resp);
+    token.value = resp.data;
+    step.value = 1;
+  });
+};
+
+const copy = () => {
+  Util.copyToClipboard(token.value);
 };
 
 const openModal = (computer) => {
   computerValue.value = JSON.parse(JSON.stringify(computer)) ?? {};
+  console.log(computerValue.value);
   model.value = true;
+};
+
+const close = () => {
+  model.value = false;
+  step.value = 0;
 };
 
 defineExpose({
