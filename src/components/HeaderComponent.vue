@@ -41,7 +41,7 @@
 import router from '@/router';
 import { computed, ref } from 'vue';
 
-import UserConfigModal from '@/pages/UserConfigModal.vue';
+import UserConfigModal from '@/views/UserConfigModal.vue';
 
 const currentRoute = computed(() => router.currentRoute.value.path);
 const links = computed(() => [

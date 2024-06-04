@@ -19,4 +19,7 @@ export default createVuetify({
     VDateInput,
     VDatePicker,
   },
+  locale: {
+    locale: 'pt',
+  },
 });
