@@ -1,6 +1,7 @@
 <template>
   <v-container class="pa-0" fluid fill-height>
     <div class="background-image"></div>
+    <Snackbar v-model="snackbar" :message="message" />
     <div class="login-container">
       <v-container>
         <v-img class="logo-image" src="/logo.png" alt="Logo"></v-img>
@@ -34,7 +35,6 @@
             variant="elevated"
             width="100%"
             color="#3D95D2"
-            @click="login"
             :disabled="disableBtn()"
           >
             Entrar
@@ -97,13 +97,29 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import api from '@/api';
+import router from '@/router';
+import Snackbar from '@/components/Snackbar.vue';
 
 const email = ref();
 const password = ref();
+const message = ref();
+const snackbar = ref(false);
 
 const handleSubmit = (e) => {
   e.preventDefault();
+
+  api
+    .login(email.value, password.value)
+    .then((response) => {
+      if (response.status >= 200 && response.status <= 300) {
+        return router.push({ path: '/occurrences' });
+      }
+    })
+    .catch((err) => {
+      snackbar.value = true;
+      message.value = 'Erro ao autenticar, tente novamente!';
+    });
 };
 
 const blankInput = (v) => {

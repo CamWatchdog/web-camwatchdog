@@ -61,7 +61,7 @@
         <v-expansion-panel style="border: 1px solid var(--warn-500)" bg-color="var(--warn-100)">
           <v-expansion-panel-title>
             <template #actions>
-              <v-icon color="var(--warn-500)" icon="mdi-chevron-down"></v-icon>
+              <v-icon color="var(--warn-500)">$expand</v-icon>
             </template>
             <v-icon icon="mdi-shield-alert-outline" color="var(--warn-500)" />
             <div class="infos">

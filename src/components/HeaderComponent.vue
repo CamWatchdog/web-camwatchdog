@@ -54,12 +54,13 @@ const links = computed(() => [
 const showConfigModal = ref(false);
 
 const openConfig = () => {
-  console.log('config');
   showConfigModal.value = true;
 };
 
 const exit = () => {
-  console.log('exit');
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  return router.push({ path: '/login' });
 };
 </script>
 <style scoped>

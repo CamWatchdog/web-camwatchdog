@@ -8,12 +8,10 @@ axiosInstance.defaults.baseURL = import.meta.env.VITE_API_ADDRESS;
 
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
-  config.headers['Authorization'] =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZmVsaXBpbiIsImlkIjoyLCJjcGYiOiIxMzI4NzczMzk2NiIsImVtYWlsIjoiZi5hLmphbm90dGVAZ21haWwuY29tIiwiaWF0IjoxNzE2OTMyNzQ2LCJleHAiOjE3MTY5NDcxNDZ9.VrajPhHLDGJsu4khGsvcAIG1fHRPezFvN9fQq8Aj3NM';
 
   console.log(config);
   return config;
@@ -23,8 +21,8 @@ export default {
   login(username, password) {
     return axiosInstance.post('/login', { username, password }).then((res) => {
       localStorage.setItem('token', res.data.access_token);
-      localStorage.setItem('userLogged', res.data.user);
-      return res.data;
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      return res;
     });
   },
   Users,
