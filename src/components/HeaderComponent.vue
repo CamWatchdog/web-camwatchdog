@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <nav class="link-container">
-      <router-link to="/" class="link-item">
+      <router-link to="/occurrences" class="link-item">
         <v-img class="logo-link" src="/logo.png" alt="Logo" />
       </router-link>
       <router-link

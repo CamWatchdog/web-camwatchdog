@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-0" fluid fill-height>
     <div class="background-image"></div>
-    <Snackbar v-model="snackbar" :message="message" />
+    <Snackbar v-model="snackbar" :message="message" :color="color" />
     <div class="login-container">
       <v-container>
         <v-img class="logo-image" src="/logo.png" alt="Logo"></v-img>
@@ -104,6 +104,7 @@ import Snackbar from '@/components/Snackbar.vue';
 const email = ref();
 const password = ref();
 const message = ref();
+const color = ref();
 const snackbar = ref(false);
 
 const handleSubmit = (e) => {
@@ -117,6 +118,7 @@ const handleSubmit = (e) => {
       }
     })
     .catch((err) => {
+      color.value = 'error';
       snackbar.value = true;
       message.value = 'Erro ao autenticar, tente novamente!';
     });

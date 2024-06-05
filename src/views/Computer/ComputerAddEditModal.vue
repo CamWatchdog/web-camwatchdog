@@ -1,5 +1,6 @@
 <template>
   <v-dialog v-model="model" max-width="500">
+    <Snackbar v-model="snackbar" :message="message" :color="color" />
     <v-card color="var(--blue-700)">
       <v-card-title style="color: white">
         {{ computerValue.computerId ? 'Editar' : 'Criar' }}
@@ -74,12 +75,16 @@
 import { ref } from 'vue';
 import Util from '@/util';
 import api from '@/api';
+import Snackbar from '@/components/Snackbar.vue';
 
 const model = defineModel();
 const computerValue = ref({});
 const step = ref(0);
 const token = ref('');
 const formValidate = ref(false);
+const message = ref();
+const color = ref();
+const snackbar = ref(false);
 
 const emit = defineEmits(['submit']);
 
@@ -112,6 +117,9 @@ const create = () => {
 
 const copy = () => {
   Util.copyToClipboard(token.value);
+  color.value = 'success';
+  snackbar.value = true;
+  message.value = 'Copiado com sucesso!';
 };
 
 const openModal = (computer) => {
