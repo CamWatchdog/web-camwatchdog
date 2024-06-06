@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main class="body">
-      <HeaderComponent v-if="!isLoginPage" />
+      <HeaderComponent v-if="!isLoginPage && !isResetPage" />
       <router-view />
     </v-main>
   </v-app>
@@ -12,15 +12,8 @@ import { computed } from 'vue';
 import router from './router';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 
-const hasToken = localStorage.getItem('token');
-
 const isLoginPage = computed(() => router.currentRoute.value.path === '/login');
-
-if (hasToken && isLoginPage) {
-  router.push({ path: '/occurrences' });
-} else {
-  router.push({ path: '/login' });
-}
+const isResetPage = computed(() => router.currentRoute.value.path === '/resetPassword');
 </script>
 
 <style scoped>

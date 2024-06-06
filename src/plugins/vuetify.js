@@ -12,6 +12,7 @@ import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import { VDateInput } from 'vuetify/labs/VDateInput';
 import { VDatePicker } from 'vuetify/lib/components/index.mjs';
+import { pt } from 'vuetify/locale';
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -21,5 +22,6 @@ export default createVuetify({
   },
   locale: {
     locale: 'pt',
+    messages: { pt },
   },
 });
