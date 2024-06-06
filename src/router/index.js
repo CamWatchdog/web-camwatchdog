@@ -16,11 +16,11 @@ router.beforeEach((to, from, next) => {
 
   if (!hasToken && to.path !== '/login') {
     next({ path: '/login' });
-  } else if (hasToken && to.path === '/login') {
+  } else if (hasToken && to.path === '/login' || !router.hasRoute(to.name)) {
     next({ path: '/occurrences' });
-  } else {
-    next();
   }
+
+  next();
 });
 
 export default router;
