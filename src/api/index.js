@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Users from './Users';
-import Occurence from './Occurence';
+import Occurrence from './Occurrence';
 import Computer from './Computer';
 
 export const axiosInstance = axios.create({});
@@ -13,7 +13,6 @@ axiosInstance.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  console.log(config);
   return config;
 });
 
@@ -26,6 +25,6 @@ export default {
     });
   },
   Users,
-  Occurence,
+  Occurrence,
   Computer,
 };

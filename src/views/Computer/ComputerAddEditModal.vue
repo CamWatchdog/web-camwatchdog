@@ -108,7 +108,6 @@ const update = () => {
 
 const create = () => {
   api.Computer.create(computerValue.value).then((resp) => {
-    console.log(resp);
     token.value = resp.data;
     step.value = 1;
     emit('submit');
@@ -124,7 +123,6 @@ const copy = () => {
 
 const openModal = (computer) => {
   computerValue.value = JSON.parse(JSON.stringify(computer)) ?? {};
-  console.log(computerValue.value);
   model.value = true;
 };
 
