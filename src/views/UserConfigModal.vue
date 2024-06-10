@@ -59,12 +59,10 @@ const user = ref({
 const formValidate = ref(false);
 
 const updateUser = () => {
-  console.log('update user');
   return api.Users.update(user.value.userId, user.value);
 };
 
 const changePassword = () => {
-  console.log('change password');
   return api.Users.changeUserPassword(
     user.value.userId,
     user.value.currentPassword,
@@ -73,7 +71,6 @@ const changePassword = () => {
 };
 
 const submit = () => {
-  console.log('submit');
   if (formValidate.value) {
     if (user.value.newPassword && user.value.currentPassword) {
       changePassword();

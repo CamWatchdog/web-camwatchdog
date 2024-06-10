@@ -1,7 +1,7 @@
 <template>
-  <Occurrences />
+  <OccurrenceList />
 </template>
 
 <script setup>
-import Occurrences from '@/views/Occurrences.vue';
+import OccurrenceList from '@/views/Occurrence/OccurrenceList.vue';
 </script>
