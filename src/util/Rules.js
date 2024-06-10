@@ -11,4 +11,7 @@ export default {
   email(val) {
     return (val && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) || 'E-mail inválido';
   },
+  blankInput(val) {
+    return !!val || 'Preencha o campo!';
+  },
 };

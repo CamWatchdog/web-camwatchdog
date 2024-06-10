@@ -14,13 +14,16 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const hasToken = localStorage.getItem('token');
 
-  if (!hasToken && to.path !== '/login') {
+  if (!hasToken && to.path !== '/login' && to.path !== '/resetPassword') {
     next({ path: '/login' });
-  } else if (hasToken && to.path === '/login' || !router.hasRoute(to.name)) {
+  } else if (
+    (hasToken && (to.path === '/login' || to.path === '/resetPassword')) ||
+    !router.hasRoute(to.name)
+  ) {
     next({ path: '/occurrences' });
+  } else {
+    next();
   }
-
-  next();
 });
 
 export default router;

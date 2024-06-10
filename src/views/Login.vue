@@ -15,7 +15,7 @@
               density="comfortable"
               v-model="email"
               label="Email"
-              :rules="[blankInput]"
+              :rules="[Util.Rules.blankInput]"
               @keydown.space.prevent
             ></v-text-field>
             <v-text-field
@@ -26,7 +26,7 @@
               name="password"
               type="password"
               autocomplete="off"
-              :rules="[blankInput]"
+              :rules="[Util.Rules.blankInput]"
               @keydown.space.prevent
             ></v-text-field>
           </v-card-text>
@@ -41,8 +41,14 @@
           </v-btn>
         </v-form>
         <v-divider></v-divider>
-        <v-card-text class="d-flex align-center justify-center pa-0"
-          ><span class="cursor-pointer">Esqueceu sua senha?</span>
+        <v-card-text class="d-flex align-center justify-center pa-0">
+          <router-link
+            style="text-decoration: none; color: inherit"
+            to="/resetPassword"
+            class="cursor-pointer"
+          >
+            Esqueceu sua senha?
+          </router-link>
         </v-card-text>
       </v-card>
     </div>
@@ -100,6 +106,7 @@ import { ref } from 'vue';
 import api from '@/api';
 import router from '@/router';
 import Snackbar from '@/components/Snackbar.vue';
+import Util from '@/util';
 
 const email = ref();
 const password = ref();
@@ -122,10 +129,6 @@ const handleSubmit = (e) => {
       snackbar.value = true;
       message.value = 'Erro ao autenticar, tente novamente!';
     });
-};
-
-const blankInput = (v) => {
-  return !!v || 'Preencha o campo!';
 };
 
 const disableBtn = () => {
