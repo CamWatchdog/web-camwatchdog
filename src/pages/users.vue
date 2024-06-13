@@ -1,7 +1,7 @@
 <template>
-  <h1>users</h1>
+  <UserList />
 </template>
 
-<script setup></script>
-
-<style scoped></style>
+<script setup>
+import UserList from '@/views/User/UserList.vue';
+</script>

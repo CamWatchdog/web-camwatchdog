@@ -14,7 +14,6 @@
           v-model="search"
           hide-details
           single-line
-          @keydown.space.prevent
         />
       </v-col>
       <v-col cols="2">
@@ -158,7 +157,7 @@ const getOccurrenceList = () => {
   }
 
   api.Occurrence.findAll(
-    search.value,
+    search.value.trim(),
     pageSize.value,
     page.value,
     endTime.value?.getTime(),

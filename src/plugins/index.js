@@ -5,11 +5,10 @@
  */
 
 // Plugins
-import vuetify from './vuetify'
-import router from '@/router'
+import vuetify from './vuetify';
+import router from '@/router';
+import { vMaska } from 'maska/vue';
 
-export function registerPlugins (app) {
-  app
-    .use(vuetify)
-    .use(router)
+export function registerPlugins(app) {
+  app.use(vuetify).use(router).directive('maska', vMaska);
 }

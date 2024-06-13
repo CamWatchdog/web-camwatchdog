@@ -1,10 +1,8 @@
 <template>
-  <div class="computer-list">
-    <div class="computer-header">
-      <h2>Monitoramento</h2>
-      <v-btn @click="addEditComputer({})" color="var(--blue-700)" class="add-button">
-        Adicionar
-      </v-btn>
+  <div class="user-list">
+    <div class="user-header">
+      <h2>Usuários</h2>
+      <v-btn @click="addEditUser({})" color="var(--blue-700)" class="add-button"> Adicionar </v-btn>
     </div>
     <v-row dense>
       <v-col cols="auto">
@@ -12,37 +10,17 @@
         <v-text-field
           class="search-user"
           density="comfortable"
-          label="Computador"
+          label="Nome, CPF, E-mail"
           variant="solo"
           v-model="search"
           hide-details
           single-line
         />
       </v-col>
-      <v-col cols="2">
-        <span>Data Início</span>
-        <v-date-input
-          v-model="startTime"
-          variant="solo"
-          prepend-icon=""
-          prepend-inner-icon="$calendar"
-          placeholder="DD/MM/AAAA"
-        />
-      </v-col>
-      <v-col cols="2">
-        <span>Data Final</span>
-        <v-date-input
-          v-model="endTime"
-          variant="solo"
-          prepend-icon=""
-          prepend-inner-icon="$calendar"
-          placeholder="DD/MM/AAAA"
-        />
-      </v-col>
     </v-row>
     <v-btn
       @click="filter"
-      class="text-white text-capitalize mb-5"
+      class="text-white text-capitalize mb-5 mt-6"
       height="50"
       width="100"
       color="var(--blue-900)"
@@ -56,29 +34,27 @@
       </div>
       <div class="filtered">
         <v-chip
-          v-for="(filter, i) in filters"
-          :key="filter.id"
+          v-if="search"
           class="chip"
           size="small"
           variant="flat"
           color="var(--neutral-black)"
           closable
-          @click:close="removeFilter(filter, i)"
+          @click:close="() => (search = '')"
         >
-          {{ filter.text }}
+          {{ search }}
         </v-chip>
       </div>
     </div>
     <div class="list">
-      <div v-for="computer in computerList" :key="computer.computerId" class="list-item">
-        <v-icon icon="mdi-laptop" color="var(--blue-500)" />
+      <div v-for="user in userList" :key="user.userId" class="list-item">
+        <v-icon icon="mdi-account-outline" color="var(--blue-500)" />
         <div class="list-item-info">
-          <div class="date">{{ Util.formatDate(computer.createdAt) }}</div>
-          <div class="user">Computador: {{ computer.description }}</div>
+          <div class="user">Usuário: {{ user.name }}</div>
         </div>
         <div class="actions">
           <v-btn
-            @click="addEditComputer(computer)"
+            @click="addEditUser(user)"
             variant="text"
             icon="mdi-pencil-outline"
             color="var(--blue-500)"
@@ -87,7 +63,7 @@
             variant="text"
             icon="mdi-trash-can-outline"
             color="var(--blue-500)"
-            @click="deleteComputer(computer)"
+            @click="deleteUser(user)"
           />
         </div>
       </div>
@@ -100,29 +76,28 @@
               v-model="page"
               :disabled="loading"
               :length="totalPages"
-              @update:modelValue="getComputerList"
+              @update:modelValue="getUserList"
             />
           </v-container>
         </v-col>
       </v-row>
     </v-container>
   </div>
-  <ComputerConfirmDeleteModal
+  <UserConfirmDeleteModal
     v-model="showConfirmDeleteModal"
-    @delete="getComputerList"
+    @delete="getUserList"
     ref="DeleteModal"
   />
-  <ComputerAddEditModal v-model="showAddEditModal" @submit="getComputerList" ref="AddEditModal" />
+  <UserAddEditModal v-model="showAddEditModal" @submit="getUserList" ref="AddEditModal" />
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
-import ComputerConfirmDeleteModal from './ComputerConfirmDeleteModal.vue';
-import ComputerAddEditModal from './ComputerAddEditModal.vue';
+import UserConfirmDeleteModal from './UserConfirmDeleteModal.vue';
+import UserAddEditModal from './UserAddEditModal.vue';
 
 import api from '@/api';
-import Util from '@/util';
 
-const computerList = ref([]);
+const userList = ref([]);
 const search = ref('');
 const pageSize = ref(5);
 const page = ref(1);
@@ -130,82 +105,46 @@ const totalPages = ref(0);
 const showConfirmDeleteModal = ref(false);
 const showAddEditModal = ref(false);
 const filters = ref([]);
-const startTime = ref(null);
-const endTime = ref(null);
 
 const loading = ref(false);
 
 const DeleteModal = ref(null);
 const AddEditModal = ref(null);
 
-const getComputerList = () => {
+const getUserList = () => {
   loading.value = true;
-  api.Computer.findAll(
-    search.value.trim(),
-    pageSize.value,
-    page.value,
-    startTime.value?.getTime(),
-    endTime.value?.getTime(),
-  )
+
+  api.Users.findAll(search.value.trim(), pageSize.value, page.value)
     .then((response) => {
-      computerList.value = response.data.data;
-      totalPages.value = response.data.totalPages ?? 0;
+      userList.value = response.data.data;
     })
     .finally(() => {
       loading.value = false;
     });
 };
 
-const deleteComputer = (computer) => {
-  DeleteModal.value.openModal(computer);
+const deleteUser = (user) => {
+  DeleteModal.value.openModal(user);
 };
 
-const addEditComputer = (computer) => {
-  AddEditModal.value.openModal(computer);
+const addEditUser = (user) => {
+  AddEditModal.value.openModal(user);
 };
 
 const filter = () => {
   filters.value = [];
   if (search.value) {
-    filters.value.push({ type: 'search', text: `Computador: ${search.value}` });
+    filters.value.push({ type: 'search', text: search.value });
   }
-  if (startTime.value) {
-    filters.value.push({
-      type: 'startTime',
-      text: `Data Início: ${Util.formatDate(startTime.value, 'short')}`,
-    });
-  }
-  if (endTime.value) {
-    filters.value.push({
-      type: 'endTime',
-      text: `Data Final: ${Util.formatDate(endTime.value, 'short')}`,
-    });
-  }
-  getComputerList();
-};
-
-const removeFilter = (filter, index) => {
-  switch (filter.type) {
-    case 'search':
-      search.value = '';
-      break;
-    case 'startTime':
-      startTime.value = null;
-      break;
-    case 'endTime':
-      endTime.value = null;
-      break;
-  }
-  filters.value.splice(index, 1);
-  getComputerList();
+  getUserList();
 };
 
 onMounted(() => {
-  getComputerList();
+  getUserList();
 });
 </script>
 <style scoped>
-.computer-list {
+.user-list {
   padding: 1rem;
 }
 
@@ -238,13 +177,13 @@ onMounted(() => {
   display: flex;
 }
 
-.computer-header {
+.user-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.computer-header .add-button {
+.user-header .add-button {
   color: white;
 }
 
