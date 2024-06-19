@@ -1,50 +1,105 @@
 <template>
   <v-container class="d-flex justify-end pa-0" fluid fill-height>
     <div class="background-image"></div>
+    <Snackbar v-model="snackbar" :message="message" :color="color" :location="location" />
     <div class="reset-container">
       <v-container>
         <v-img class="logo-image" src="/logo.png" alt="Logo"></v-img>
       </v-container>
-      <v-card class="reset-card" rounded="0" color="#1B2440">
-        <v-card-title class="text-center">Redefinição de Senha</v-card-title>
-        <v-form @submit="handleSubmit">
-          <v-card-text class="pl-0 pr-0 pt-0">
-            <v-text-field
-              variant="solo"
-              density="comfortable"
-              v-model="email"
-              label="Email"
-              :rules="[Util.Rules.blankInput]"
-              @keydown.space.prevent
-            ></v-text-field>
-            <v-text-field
-              variant="solo"
-              density="comfortable"
-              v-model="password"
-              label="Senha"
-              name="password"
-              type="password"
-              autocomplete="off"
-              :rules="[Util.Rules.blankInput]"
-              @keydown.space.prevent
-            ></v-text-field>
-            <v-text-field
-              variant="solo"
-              density="comfortable"
-              v-model="confirmPassword"
-              label="Confirmar Senha"
-              name="confirmPassword"
-              type="password"
-              autocomplete="off"
-              :rules="[Util.Rules.blankInput]"
-              @keydown.space.prevent
-            ></v-text-field>
-          </v-card-text>
-          <v-btn type="submit" variant="elevated" width="100%" color="#3D95D2">
-            REDEFINIR
-          </v-btn>
-        </v-form>
-      </v-card>
+      <v-stepper
+        :items="['Redefinir Senha', 'Confirmar Código']"
+        bg-color="var(--blue-900)"
+        rounded="0"
+        class="reset-cards pa-0"
+        ref="stepper"
+        hide-actions
+        alt-labels
+        mobile
+      >
+        <template v-slot:item.1>
+          <v-card class="card" rounded="0">
+            <v-card-title class="text-center">Redefinir Senha</v-card-title>
+            <v-form v-model="formValidate" @submit.prevent>
+              <v-card-text class="pl-0 pr-0 pt-0">
+                <v-text-field
+                  variant="solo"
+                  density="comfortable"
+                  v-model="email"
+                  label="Email"
+                  :rules="[Util.Rules.required, Util.Rules.email]"
+                  @keydown.space.prevent
+                ></v-text-field>
+                <v-text-field
+                  variant="solo"
+                  density="comfortable"
+                  v-model="password"
+                  label="Senha"
+                  name="password"
+                  type="password"
+                  autocomplete="off"
+                  :rules="[
+                    Util.Rules.required,
+                    Util.Rules.passwordMinChar,
+                    Util.Rules.passwordHasSpecialChar,
+                  ]"
+                  @keydown.space.prevent
+                ></v-text-field>
+                <v-text-field
+                  variant="solo"
+                  density="comfortable"
+                  v-model="confirmPassword"
+                  label="Confirmar Senha"
+                  name="confirmPassword"
+                  type="password"
+                  autocomplete="off"
+                  :rules="[
+                    Util.Rules.required,
+                    Util.Rules.passwordMinChar,
+                    Util.Rules.passwordHasSpecialChar,
+                  ]"
+                  @keydown.space.prevent
+                ></v-text-field>
+              </v-card-text>
+              <v-btn
+                type="submit"
+                variant="elevated"
+                width="100%"
+                @click="handleSubmitRedefinePassword"
+                color="#3d95d2"
+              >
+                PRÓXIMO
+              </v-btn>
+            </v-form>
+          </v-card>
+        </template>
+        <template v-slot:item.2>
+          <v-card class="card" rounded="0">
+            <v-card-title class="text-center">Confirmar Código</v-card-title>
+            <div>Insira abaixo o código de confirmação que foi enviado para o seu e-mail.</div>
+            <v-form @submit.prevent v-model="formValidate">
+              <v-card-text class="pl-0 pr-0 pt-0">
+                <v-text-field
+                  variant="solo"
+                  density="comfortable"
+                  v-model="codigo"
+                  label="Código"
+                  :rules="[Util.Rules.required]"
+                  @keydown.space.prevent
+                ></v-text-field>
+              </v-card-text>
+              <v-btn
+                type="submit"
+                variant="elevated"
+                width="100%"
+                color="#3d95d2"
+                @click="handleSubmitConfirmationCode"
+              >
+                CONFIRMAR
+              </v-btn>
+            </v-form>
+          </v-card>
+        </template>
+      </v-stepper>
     </div>
   </v-container>
 </template>
@@ -52,22 +107,38 @@
 <script setup>
 import { ref } from 'vue';
 import Util from '@/util';
+import api from '@/api';
+import Snackbar from '@/components/Snackbar.vue';
+
+const formValidate = ref(false);
+const stepper = ref();
 
 const email = ref();
 const password = ref();
+const confirmPassword = ref();
+const codigo = ref();
+
+const location = ref();
 const message = ref();
 const color = ref();
 const snackbar = ref(false);
 
-const disableBtn = () => {
-  const regex = /\S+@\S+\.\S+/;
-  const emailValidated = regex.test(email.value);
-
-  if (email.value && emailValidated && password.value && password.value.length > 8) {
-    return false;
+const handleSubmitRedefinePassword = () => {
+  if (formValidate.value) {
+    if (password.value !== confirmPassword.value) {
+      message.value = 'Senhas não se conferem';
+      location.value = 'start top';
+      color.value = 'error';
+      snackbar.value = true;
+    } else {
+      stepper.value.next();
+    }
   }
+};
 
-  return true;
+const handleSubmitConfirmationCode = () => {
+  if (formValidate.value) {
+  }
 };
 </script>
 
@@ -99,15 +170,26 @@ const disableBtn = () => {
   width: 50%;
   max-width: 600px;
   height: 100vh;
-  background-color: #2c395e;
+  background-color: var(--blue-700);
 }
 
-.reset-card {
+.reset-cards {
   display: flex;
+  color: white;
   flex-direction: column;
-  gap: 20px;
+  max-height: 100%;
   width: 80%;
   padding: 3rem 1rem;
+}
+
+.card {
+  display: flex;
+  color: white;
+  flex-direction: column;
+  overflow-y: auto;
+  width: 100%;
+  gap: 20px;
+  background-color: transparent;
 }
 
 @media (max-width: 600px) {

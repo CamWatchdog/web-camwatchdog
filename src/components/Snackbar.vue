@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-    location="end top"
+    :location="location"
     id="snackbar"
     :timeout="3000"
     :color="color"
@@ -15,7 +15,8 @@
 import { computed } from 'vue';
 
 const snackbar = defineModel();
-const props = defineProps(['message', 'color']);
+const props = defineProps(['message', 'color', 'location']);
+const location = computed(() => props.location)
 const color = computed(() => props.color);
 const message = computed(() => props.message);
 </script>

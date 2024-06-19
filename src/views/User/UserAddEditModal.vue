@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="model" max-width="500">
-    <Snackbar v-model="snackbar" :message="message" :color="color" />
+    <Snackbar v-model="snackbar" :message="message" :color="color" :location="location" />
     <v-card color="var(--blue-700)">
       <v-card-title style="color: white">
         {{ userValue.userId ? 'Editar' : 'Criar' }}
@@ -92,6 +92,7 @@ const model = defineModel();
 const userValue = ref({});
 const step = ref(0);
 const formValidate = ref(false);
+const location = ref();
 const message = ref();
 const color = ref();
 const snackbar = ref(false);
@@ -120,6 +121,7 @@ const update = () => {
     step.value = 1;
     emit('submit');
     message.value = 'Usuário atualizado com sucesso';
+    location.value = 'end top'
     color.value = 'success';
     snackbar.value = true;
   });
@@ -139,11 +141,13 @@ const create = () => {
       model.value = false;
       emit('submit');
       message.value = 'Usuário criado com sucesso';
+      location.value = 'end top'
       color.value = 'success';
       snackbar.value = true;
     });
   } else {
     message.value = 'As senhas não conferem';
+    location.value = 'end top'
     color.value = 'error';
     snackbar.value = true;
   }

@@ -1,21 +1,21 @@
 <template>
   <v-container class="pa-0" fluid fill-height>
     <div class="background-image"></div>
-    <Snackbar v-model="snackbar" :message="message" :color="color" />
+    <Snackbar v-model="snackbar" :message="message" :color="color" :location="location" />
     <div class="login-container">
       <v-container>
         <v-img class="logo-image" src="/logo.png" alt="Logo"></v-img>
       </v-container>
       <v-card class="login-card" rounded="0" color="#1B2440">
         <v-card-title class="text-center">Login</v-card-title>
-        <v-form @submit="handleSubmit">
+        <v-form @submit.prevent v-model="formValidate">
           <v-card-text class="pl-0 pr-0 pt-0">
             <v-text-field
               variant="solo"
               density="comfortable"
               v-model="email"
               label="Email"
-              :rules="[Util.Rules.blankInput]"
+              :rules="[Util.Rules.required, Util.Rules.email]"
               @keydown.space.prevent
             ></v-text-field>
             <v-text-field
@@ -26,7 +26,7 @@
               name="password"
               type="password"
               autocomplete="off"
-              :rules="[Util.Rules.blankInput]"
+              :rules="[Util.Rules.required, Util.Rules.passwordMinChar]"
               @keydown.space.prevent
             ></v-text-field>
           </v-card-text>
@@ -35,7 +35,7 @@
             variant="elevated"
             width="100%"
             color="#3D95D2"
-            :disabled="disableBtn()"
+            @click="handleSubmit"
           >
             Entrar
           </v-btn>
@@ -108,37 +108,30 @@ import router from '@/router';
 import Snackbar from '@/components/Snackbar.vue';
 import Util from '@/util';
 
+const formValidate = ref(false);
 const email = ref();
 const password = ref();
+
+const location = ref();
 const message = ref();
 const color = ref();
 const snackbar = ref(false);
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-
-  api
-    .login(email.value, password.value)
-    .then((response) => {
-      if (response.status >= 200 && response.status <= 300) {
-        return router.push({ path: '/occurrences' });
-      }
-    })
-    .catch((err) => {
-      color.value = 'error';
-      snackbar.value = true;
-      message.value = 'Erro ao autenticar, tente novamente!';
-    });
-};
-
-const disableBtn = () => {
-  const regex = /\S+@\S+\.\S+/;
-  const emailValidated = regex.test(email.value);
-
-  if (email.value && emailValidated && password.value && password.value.length > 8) {
-    return false;
+const handleSubmit = () => {
+  if (formValidate.value) {
+    api
+      .login(email.value, password.value)
+      .then((response) => {
+        if (response.status >= 200 && response.status <= 300) {
+          return router.push({ path: '/occurrences' });
+        }
+      })
+      .catch((err) => {
+        color.value = 'error';
+        message.value = 'Erro ao autenticar, tente novamente';
+        location.value = 'end top';
+        snackbar.value = true;
+      });
   }
-
-  return true;
 };
 </script>
