@@ -41,7 +41,7 @@
       </v-col>
     </v-row>
     <v-btn
-      @click="filter"
+      @click="getComputerList"
       class="text-white text-capitalize mb-5"
       height="50"
       width="100"
@@ -49,26 +49,6 @@
     >
       Filtrar
     </v-btn>
-    <div v-show="filters.length > 0" class="filters mb-5">
-      <div class="filters-title">
-        <v-icon icon="mdi-filter-variant" size="large" />
-        <span>Filtros</span>
-      </div>
-      <div class="filtered">
-        <v-chip
-          v-for="(filter, i) in filters"
-          :key="filter.id"
-          class="chip"
-          size="small"
-          variant="flat"
-          color="var(--neutral-black)"
-          closable
-          @click:close="removeFilter(filter, i)"
-        >
-          {{ filter.text }}
-        </v-chip>
-      </div>
-    </div>
     <div class="list">
       <div v-for="computer in computerList" :key="computer.computerId" class="list-item">
         <v-icon icon="mdi-laptop" color="var(--blue-500)" />
@@ -129,7 +109,6 @@ const page = ref(1);
 const totalPages = ref(0);
 const showConfirmDeleteModal = ref(false);
 const showAddEditModal = ref(false);
-const filters = ref([]);
 const startTime = ref(null);
 const endTime = ref(null);
 
@@ -162,42 +141,6 @@ const deleteComputer = (computer) => {
 
 const addEditComputer = (computer) => {
   AddEditModal.value.openModal(computer);
-};
-
-const filter = () => {
-  filters.value = [];
-  if (search.value) {
-    filters.value.push({ type: 'search', text: `Computador: ${search.value}` });
-  }
-  if (startTime.value) {
-    filters.value.push({
-      type: 'startTime',
-      text: `Data Início: ${Util.formatDate(startTime.value, 'short')}`,
-    });
-  }
-  if (endTime.value) {
-    filters.value.push({
-      type: 'endTime',
-      text: `Data Final: ${Util.formatDate(endTime.value, 'short')}`,
-    });
-  }
-  getComputerList();
-};
-
-const removeFilter = (filter, index) => {
-  switch (filter.type) {
-    case 'search':
-      search.value = '';
-      break;
-    case 'startTime':
-      startTime.value = null;
-      break;
-    case 'endTime':
-      endTime.value = null;
-      break;
-  }
-  filters.value.splice(index, 1);
-  getComputerList();
 };
 
 onMounted(() => {
@@ -256,29 +199,6 @@ onMounted(() => {
 .search-dates {
   width: 14rem;
   max-width: 100%;
-}
-
-.filters {
-  display: flex;
-  flex-direction: column;
-}
-
-.filters-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.filtered {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.chip {
-  cursor: pointer;
-  vertical-align: middle;
 }
 
 .infos {
