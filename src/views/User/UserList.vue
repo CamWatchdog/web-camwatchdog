@@ -19,7 +19,7 @@
       </v-col>
     </v-row>
     <v-btn
-      @click="filter"
+      @click="getUserList"
       class="text-white text-capitalize mb-5 mt-6"
       height="50"
       width="100"
@@ -27,25 +27,6 @@
     >
       Filtrar
     </v-btn>
-    <div v-show="filters.length > 0" class="filters mb-5">
-      <div class="filters-title">
-        <v-icon icon="mdi-filter-variant" size="large" />
-        <span>Filtros</span>
-      </div>
-      <div class="filtered">
-        <v-chip
-          v-if="search"
-          class="chip"
-          size="small"
-          variant="flat"
-          color="var(--neutral-black)"
-          closable
-          @click:close="() => (search = '')"
-        >
-          {{ search }}
-        </v-chip>
-      </div>
-    </div>
     <div class="list">
       <div v-for="user in userList" :key="user.userId" class="list-item">
         <v-icon icon="mdi-account-outline" color="var(--blue-500)" />
@@ -104,7 +85,6 @@ const page = ref(1);
 const totalPages = ref(0);
 const showConfirmDeleteModal = ref(false);
 const showAddEditModal = ref(false);
-const filters = ref([]);
 
 const loading = ref(false);
 
@@ -129,14 +109,6 @@ const deleteUser = (user) => {
 
 const addEditUser = (user) => {
   AddEditModal.value.openModal(user);
-};
-
-const filter = () => {
-  filters.value = [];
-  if (search.value) {
-    filters.value.push({ type: 'search', text: search.value });
-  }
-  getUserList();
 };
 
 onMounted(() => {
@@ -195,29 +167,6 @@ onMounted(() => {
 .search-dates {
   width: 14rem;
   max-width: 100%;
-}
-
-.filters {
-  display: flex;
-  flex-direction: column;
-}
-
-.filters-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.filtered {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.chip {
-  cursor: pointer;
-  vertical-align: middle;
 }
 
 .infos {
