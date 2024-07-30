@@ -1,4 +1,5 @@
 <template>
+  <Snackbar v-model="snackbar" :message="message" :color="color" :location="location" />
   <header class="header">
     <nav class="link-container">
       <router-link to="/occurrences" class="link-item">
@@ -35,13 +36,13 @@
       </v-list>
     </v-menu>
   </header>
-  <UserConfigModal v-model="showConfigModal" />
+  <UserConfigModal v-model="showConfigModal" ref="ConfigModal" />
 </template>
 <script setup>
 import router from '@/router';
 import { computed, ref } from 'vue';
 
-import UserConfigModal from '@/views/UserConfigModal.vue';
+import UserConfigModal from '../views/UserConfigModal.vue';
 
 const currentRoute = computed(() => router.currentRoute.value.path);
 const links = computed(() => [
@@ -53,8 +54,15 @@ const links = computed(() => [
 
 const showConfigModal = ref(false);
 
-const openConfig = () => {
-  showConfigModal.value = true;
+const ConfigModal = ref(null);
+
+const location = ref();
+const message = ref();
+const color = ref();
+const snackbar = ref(false);
+
+const openConfig = async () => {
+  ConfigModal.value.openModal();
 };
 
 const exit = () => {

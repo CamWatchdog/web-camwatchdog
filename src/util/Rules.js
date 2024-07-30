@@ -3,7 +3,7 @@ export default {
     return !!val || 'Campo obrigatório';
   },
   passwordMinChar(val) {
-    return val === '' || val.length >= 8 || 'Senha deve ter no mínimo 8 caracteres';
+    return !val || val.length >= 8 || 'Senha deve ter no mínimo 8 caracteres';
   },
   passwordHasSpecialChar(val) {
     return (
