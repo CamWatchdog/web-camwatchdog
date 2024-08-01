@@ -12,6 +12,9 @@ export default {
       `/computer?description=${description}&pageSize=${pageSize}&page=${page}&startTime=${startTime}&endTime=${endTime}`,
     );
   },
+  findMapped() {
+    return axiosInstance.get('/computer/mapped');
+  },
   update(id, computer) {
     return axiosInstance.patch(`/computer/${id}`, computer);
   },

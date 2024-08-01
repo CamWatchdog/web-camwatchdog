@@ -2,6 +2,7 @@ import axios from 'axios';
 import Users from './Users';
 import Occurrence from './Occurrence';
 import Computer from './Computer';
+import Dashboard from './Dashboard';
 
 export const axiosInstance = axios.create({});
 axiosInstance.defaults.baseURL = import.meta.env.VITE_API_ADDRESS;
@@ -27,4 +28,5 @@ export default {
   Users,
   Occurrence,
   Computer,
+  Dashboard,
 };

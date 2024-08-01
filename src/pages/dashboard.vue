@@ -1,7 +1,7 @@
 <template>
-  <h1>dashboard</h1>
+  <Dashboard />
 </template>
 
-<script setup></script>
-
-<style scoped></style>
+<script setup>
+import Dashboard from '@/views/Dashboard/DashboardView.vue';
+</script>
