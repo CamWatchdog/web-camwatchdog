@@ -9,7 +9,7 @@
         <v-text-field
           class="search-user"
           density="comfortable"
-          label="Computador"
+          label="Usuário"
           variant="solo"
           v-model="search"
           hide-details
