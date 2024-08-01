@@ -24,8 +24,10 @@
               v-model="password"
               label="Senha"
               name="password"
-              type="password"
               autocomplete="off"
+              :type="show ? 'text' : 'password'"
+              @click:append-inner="show = !show"
+              :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               :rules="[Util.Rules.required, Util.Rules.passwordMinChar]"
               @keydown.space.prevent
             ></v-text-field>
@@ -116,6 +118,7 @@ const location = ref();
 const message = ref();
 const color = ref();
 const snackbar = ref(false);
+const show = ref(false)
 
 const handleSubmit = () => {
   if (formValidate.value) {
