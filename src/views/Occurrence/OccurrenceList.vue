@@ -129,12 +129,6 @@ const ImageModal = ref(null);
 const getOccurrenceList = () => {
   loading.value = true;
 
-  if (startTime.value > endTime.value) {
-    const aux = endTime.value;
-    endTime.value = startTime.value;
-    startTime.value = aux;
-  }
-
   api.Occurrence.findAll(
     search.value.trim(),
     pageSize.value,
