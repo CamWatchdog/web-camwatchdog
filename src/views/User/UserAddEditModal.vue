@@ -1,6 +1,6 @@
 <template>
+  <Snackbar v-model="snackbar" :message="message" :color="color" :location="location" />
   <v-dialog v-model="model" max-width="500">
-    <Snackbar v-model="snackbar" :message="message" :color="color" :location="location" />
     <v-card color="var(--blue-700)">
       <v-card-title style="color: white">
         {{ userValue.userId ? 'Editar' : 'Criar' }}
@@ -36,7 +36,9 @@
             density="comfortable"
             variant="solo"
             label="Senha"
-            type="password"
+            :type="show1 ? 'text' : 'password'"
+            @click:append-inner="show1 = !show1"
+            :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
             :rules="[
               Util.Rules.required,
               Util.Rules.passwordHasSpecialChar,
@@ -48,8 +50,10 @@
             v-model="userValue.confirmPassword"
             density="comfortable"
             variant="solo"
+            :type="show2 ? 'text' : 'password'"
+            @click:append-inner="show2 = !show2"
+            :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
             label="Confirmar Senha"
-            type="password"
             :rules="[
               Util.Rules.required,
               Util.Rules.passwordHasSpecialChar,
@@ -90,12 +94,13 @@ import Snackbar from '@/components/Snackbar.vue';
 
 const model = defineModel();
 const userValue = ref({});
-const step = ref(0);
 const formValidate = ref(false);
 const location = ref();
 const message = ref();
 const color = ref();
 const snackbar = ref(false);
+const show1 = ref(false);
+const show2 = ref(false);
 
 const emit = defineEmits(['submit']);
 
@@ -111,17 +116,14 @@ const submit = () => {
 
 const update = () => {
   const dto = {
-    userId: userValue.value.userId,
-    id: userValue.value.id,
     name: userValue.value.name,
     email: userValue.value.email,
     cpf: userValue.value.cpf.replace(/\D/g, ''),
   };
   api.Users.update(userValue.value.userId, dto).then(() => {
-    step.value = 1;
     emit('submit');
     message.value = 'Usuário atualizado com sucesso';
-    location.value = 'end top'
+    location.value = 'end top';
     color.value = 'success';
     snackbar.value = true;
   });
@@ -130,24 +132,22 @@ const update = () => {
 const create = () => {
   if (userValue.value.password === userValue.value.confirmPassword) {
     const dto = {
-      userId: userValue.value.userId,
-      id: userValue.value.id,
       name: userValue.value.name,
       email: userValue.value.email,
-      cpf: userValue.value.cpf,
+      cpf: userValue.value.cpf.replace(/\D/g, ''),
       password: userValue.value.password,
     };
     api.Users.create(dto).then(() => {
       model.value = false;
       emit('submit');
       message.value = 'Usuário criado com sucesso';
-      location.value = 'end top'
+      location.value = 'end top';
       color.value = 'success';
       snackbar.value = true;
     });
   } else {
     message.value = 'As senhas não conferem';
-    location.value = 'end top'
+    location.value = 'end top';
     color.value = 'error';
     snackbar.value = true;
   }
