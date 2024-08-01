@@ -16,7 +16,10 @@ export default {
   delete(id) {
     return axiosInstance.delete(`/users/${id}`);
   },
-  changeUserPassword(id, newPassword) {
-    return axiosInstance.patch(`/users/changeUserPassword/${id}`, { password: newPassword });
+  generateAndSendNewResetCode(email) {
+    return axiosInstance.post('/users/sendResetCode', { email: email });
   },
+  verifyResetPasswordCode(email, resetCode, password, confirmPassword) {
+    return axiosInstance.post('/users/verifyResetCode', { email: email, resetCode: resetCode, password: password, confirmPassword: confirmPassword });
+  }
 };

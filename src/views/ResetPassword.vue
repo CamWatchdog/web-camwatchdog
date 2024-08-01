@@ -33,9 +33,11 @@
                   variant="solo"
                   density="comfortable"
                   v-model="password"
-                  label="Senha"
+                  label="Nova Senha"
+                  :type="show1 ? 'text' : 'password'"
+                  @click:append-inner="show1 = !show1"
+                  :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                   name="password"
-                  type="password"
                   autocomplete="off"
                   :rules="[
                     Util.Rules.required,
@@ -50,7 +52,9 @@
                   v-model="confirmPassword"
                   label="Confirmar Senha"
                   name="confirmPassword"
-                  type="password"
+                  :type="show2 ? 'text' : 'password'"
+                  @click:append-inner="show2 = !show2"
+                  :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                   autocomplete="off"
                   :rules="[
                     Util.Rules.required,
@@ -62,6 +66,7 @@
               </v-card-text>
               <v-btn
                 type="submit"
+                :disabled="disable"
                 variant="elevated"
                 width="100%"
                 @click="handleSubmitRedefinePassword"
@@ -90,6 +95,7 @@
               <v-btn
                 type="submit"
                 variant="elevated"
+                :disabled="disable"
                 width="100%"
                 color="#3d95d2"
                 @click="handleSubmitConfirmationCode"
@@ -108,6 +114,7 @@
 import { ref } from 'vue';
 import Util from '@/util';
 import api from '@/api';
+import router from '@/router';
 import Snackbar from '@/components/Snackbar.vue';
 
 const formValidate = ref(false);
@@ -117,6 +124,9 @@ const email = ref();
 const password = ref();
 const confirmPassword = ref();
 const codigo = ref();
+const show1 = ref(false);
+const show2 = ref(false);
+const disable = ref(false);
 
 const location = ref();
 const message = ref();
@@ -131,13 +141,54 @@ const handleSubmitRedefinePassword = () => {
       color.value = 'error';
       snackbar.value = true;
     } else {
-      stepper.value.next();
+      disable.value = true;
+      api.Users.generateAndSendNewResetCode(email.value)
+        .then((response) => {
+          if (response.status >= 200 && response.status <= 300) {
+            disable.value = false;
+            return stepper.value.next();
+          }
+        })
+        .catch((err) => {
+          color.value = 'error';
+          message.value = 'Erro ao redefinir senha';
+          location.value = 'start top';
+          snackbar.value = true;
+          disable.value = false;
+        });
     }
   }
 };
 
 const handleSubmitConfirmationCode = () => {
   if (formValidate.value) {
+    disable.value = true;
+
+    api.Users.verifyResetPasswordCode(
+      email.value,
+      codigo.value,
+      password.value,
+      confirmPassword.value,
+    )
+      .then((response) => {
+        if (response.status >= 200 && response.status <= 300) {
+          color.value = 'success';
+          message.value = 'Senha redifinida com sucesso';
+          location.value = 'start top';
+          snackbar.value = true;
+
+          return setTimeout(() => {
+            return router.push({ path: '/login' });
+          }, 3000);
+        }
+      })
+      .catch((err) => {
+        color.value = 'error';
+        message.value = 'Erro ao verificar código';
+        location.value = 'start top';
+        snackbar.value = true;
+        disable.value = false;
+      });
   }
 };
 </script>
