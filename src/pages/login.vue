@@ -1,7 +1,7 @@
 <template>
-  <h1>login</h1>
+  <Login />
 </template>
 
 <script setup>
-  //
+import Login from '@/views/Login.vue';
 </script>

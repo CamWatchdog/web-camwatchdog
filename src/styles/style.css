@@ -1,0 +1,15 @@
+@import url('./color.css');
+@import url('./typography.css');
+@import url('./overwrite.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* OVERWRITE */
+
+.v-input--error:not(.v-input--disabled) .v-input__details > .v-icon, .v-input--error:not(.v-input--disabled) .v-input__details .v-messages, .v-input--error:not(.v-input--disabled) .v-input__prepend > .v-icon, .v-input--error:not(.v-input--disabled) .v-input__prepend .v-messages, .v-input--error:not(.v-input--disabled) .v-input__append > .v-icon, .v-input--error:not(.v-input--disabled) .v-input__append .v-messages {
+    color: var(--error-300) !important;
+}
